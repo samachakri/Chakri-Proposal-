@@ -354,7 +354,7 @@ function PortraitOverlay({ scrollProgress }) {
           boxShadow: '0 0 60px 8px rgba(255,120,180,0.7), 0 0 140px 20px rgba(255,120,180,0.4), inset 0 0 40px rgba(255,200,220,0.25)',
         }}
       >
-        <img src="/Chakri.png" alt="Chakri" className="w-full h-full object-cover" />
+        <img src="/Chakri.png?v=2" alt="Chakri" className="w-full h-full object-cover" />
         <div className="absolute inset-0 rounded-full" style={{
           background: 'radial-gradient(circle at 50% 50%, transparent 55%, rgba(255,120,180,0.35) 90%)',
         }} />
@@ -606,7 +606,7 @@ function Section3Feelings({ scrollProgress }) {
           <div className="flex justify-center">
             <div className={`relative w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-br ${moodGlow[mood]} p-1 pulse-glow`}>
               <div className="w-full h-full rounded-full overflow-hidden bg-black/40 backdrop-blur-md flex items-center justify-center">
-                <img src="/Chakri.png" alt="Chakri mascot" className="w-full h-full object-cover" style={{
+                <img src="/Chakri.png?v=2" alt="Chakri mascot" className="w-full h-full object-cover" style={{
                   filter: mood === 'Embarrassed' ? 'hue-rotate(330deg) saturate(1.4)' :
                           mood === 'Thinking' ? 'brightness(0.8) saturate(0.7)' :
                           mood === 'Joyful' ? 'brightness(1.15) saturate(1.3)' :
@@ -720,7 +720,7 @@ function Section4Memories({ scrollProgress }) {
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         <video
           ref={videoRef}
-          src="/WE.mp4"
+          src="/WE.mp4?v=2"
           muted
           playsInline
           preload="auto"
@@ -1067,7 +1067,7 @@ function Section7Proposal({ scrollProgress, onPropose }) {
               }}>
                 <div className="relative w-40 h-52 md:w-56 md:h-72 rounded-2xl overflow-hidden pulse-glow"
                   style={{ boxShadow: '0 0 50px rgba(255,120,180,0.5)' }}>
-                  <img src="/Chakri.png" alt="Chakri" className="w-full h-full object-cover" />
+                  <img src="/Chakri.png?v=2" alt="Chakri" className="w-full h-full object-cover" />
                 </div>
                 <p className="text-center mt-3 font-script text-2xl text-pink-200">Chakri</p>
               </div>
@@ -1244,6 +1244,78 @@ function Section8Reply() {
   )
 }
 
+// ============== BACKGROUND MUSIC (floating control) ==============
+function BackgroundMusic() {
+  const audioRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const [shown, setShown] = useState(true)
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.volume = 0.32
+    audio.loop = true
+
+    // Try to start playing on the FIRST user interaction (browsers block autoplay)
+    const startOnInteract = async () => {
+      try {
+        await audio.play()
+        setPlaying(true)
+      } catch (e) {
+        // user can still click the button
+      }
+      window.removeEventListener('pointerdown', startOnInteract)
+      window.removeEventListener('keydown', startOnInteract)
+      window.removeEventListener('wheel', startOnInteract)
+      window.removeEventListener('touchstart', startOnInteract)
+    }
+    window.addEventListener('pointerdown', startOnInteract, { once: true })
+    window.addEventListener('keydown', startOnInteract, { once: true })
+    window.addEventListener('wheel', startOnInteract, { once: true })
+    window.addEventListener('touchstart', startOnInteract, { once: true })
+
+    return () => {
+      window.removeEventListener('pointerdown', startOnInteract)
+      window.removeEventListener('keydown', startOnInteract)
+      window.removeEventListener('wheel', startOnInteract)
+      window.removeEventListener('touchstart', startOnInteract)
+    }
+  }, [])
+
+  const toggle = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (audio.paused) {
+      try { await audio.play(); setPlaying(true) } catch (e) {}
+    } else {
+      audio.pause(); setPlaying(false)
+    }
+  }
+
+  return (
+    <>
+      <audio ref={audioRef} src="/music.mp3" preload="auto" />
+      <button
+        onClick={toggle}
+        aria-label={playing ? 'Pause music' : 'Play music'}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-black/60 backdrop-blur border border-pink-300/40 text-pink-200 hover:text-white hover:bg-pink-500/60 transition-all shadow-[0_0_25px_rgba(255,90,160,0.45)] flex items-center justify-center"
+      >
+        {playing ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
+        ) : (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+        )}
+        {playing && (
+          <span className="absolute -top-1 -right-1 flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+          </span>
+        )}
+      </button>
+    </>
+  )
+}
+
 // ============== APP ROOT ==============
 function App() {
   // Refs to track scroll progress within each section (0..1)
@@ -1324,6 +1396,7 @@ function App() {
 
   return (
     <main className="relative">
+      <BackgroundMusic />
       <div ref={heroRef}><Section1Hero scrollProgress={s1p} onBegin={beginStory} /></div>
       <div ref={journeyRef}><Section2Journey scrollProgress={s2p} /></div>
       <div ref={feelRef}><Section3Feelings scrollProgress={s3p} /></div>
