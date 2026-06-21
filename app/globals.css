@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --primary: 340 82% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 340 82% 60%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 15%;
+  --ring: 340 82% 60%;
+  --radius: 0.75rem;
+}
+
+html, body { background: #000; color: #fff; }
+body { font-family: 'Inter', sans-serif; }
+.font-serif { font-family: 'Cormorant Garamond', serif; }
+.font-script { font-family: 'Dancing Script', cursive; }
+
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
+.glow-pink { text-shadow: 0 0 12px rgba(255,105,180,0.85), 0 0 28px rgba(255,80,160,0.55), 0 0 60px rgba(255,60,140,0.35); }
+.glow-gold { text-shadow: 0 0 12px rgba(255,215,140,0.85), 0 0 28px rgba(255,190,90,0.55); }
+.glow-button { box-shadow: 0 0 30px rgba(255,90,160,0.6), 0 0 60px rgba(255,90,160,0.4), inset 0 0 20px rgba(255,200,220,0.2); }
+
+.bg-galaxy { background: radial-gradient(ellipse at 20% 30%, rgba(120,40,160,0.35), transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(255,90,160,0.3), transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(40,20,90,0.5), transparent 70%), #04020a; }
+.bg-aurora { background: linear-gradient(180deg, #0a0518 0%, #1a0a2e 40%, #2d1338 70%, #08050f 100%); }
+.bg-glass { background: rgba(20,10,25,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+
+@keyframes float-soft { 0%,100%{ transform: translateY(0) rotate(0); } 50%{ transform: translateY(-12px) rotate(2deg); } }
+.float-soft { animation: float-soft 6s ease-in-out infinite; }
+@keyframes pulse-glow { 0%,100% { filter: brightness(1) drop-shadow(0 0 12px rgba(255,90,160,0.6)); } 50% { filter: brightness(1.2) drop-shadow(0 0 24px rgba(255,90,160,0.9)); } }
+.pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+.heart-shape { clip-path: path('M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z'); }
